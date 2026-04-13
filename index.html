@@ -1,14 +1,369 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Travel Guide</title>
+
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide-icons"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Data Store -->
+    <script>
+        const TRAVEL_DATA = {
+            trips: [
+                {
+                    id: "swiss202605",
+                    title: "Swiss & Eastern Alps Grand Tour",
+                    subtitle: "From Venetian Canals to Alpine Peaks",
+                    coverImage: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    startDate: "2026-05-30",
+                    duration: 18,
+                    summary: [
+                        { day: 1, city: "Venice", title: "Arrival in the Floating City" },
+                        { day: 2, city: "Verona & Milan", title: "Cities of Romance and Fashion" },
+                        { day: 3, city: "Chamonix", title: "At the Foot of Mont Blanc" },
+                        { day: 4, city: "Zermatt", title: "The Iconic Matterhorn" },
+                        { day: 5, city: "Lake Thun & Brienz", title: "The Two Lakes of Interlaken" },
+                        { day: 6, city: "Grindelwald", title: "Heart of the Jungfrau Region" },
+                        { day: 7, city: "Lauterbrunnen", title: "Valley of 72 Waterfalls" },
+                        { day: 8, city: "Lucerne & Innsbruck", title: "Crossing into Austria" },
+                        { day: 9, city: "Salzburg", title: "A Symphony of Sights" },
+                        { day: 10, city: "Hallstatt & Český Krumlov", title: "Fairytale Villages" },
+                        { day: 11, city: "Prague", title: "The Golden City" },
+                        { day: 12, city: "Vienna", title: "Imperial Elegance" },
+                        { day: 13, city: "Graz & Lake Bled", title: "Austrian Charm & Slovenian Jewel" },
+                        { day: 14, city: "Dolomites", title: "Seceda & Val di Funes" },
+                        { day: 15, city: "Dolomites", title: "Tre Cime & Lago di Braies" },
+                        { day: 16, city: "Dolomites", title: "Alpe di Siusi" },
+                        { day: 17, city: "Dolomites", title: "Passo Giau & Cinque Torri" },
+                        { day: 18, city: "Venice", title: "Finale and Departure" }
+                    ],
+                    itinerary: [
+                        { day: 1, date: "2026-05-30", city: "Venice", title: "Arrival in the Floating City", theme: "A Labyrinth of Water and History", mapQuery: "St Mark's Square, Venice, Italy", events: [{ time: "14:00", title: "Arrival & Vaporetto Ride", description: "Arrive at Venice Marco Polo Airport (VCE) and take a Vaporetto down the Grand Canal to your hotel.", icon: "Ship", image: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?q=80&w=2866&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "16:30", title: "St. Mark's Square & Basilica", description: "Immerse yourself in the heart of Venice. Marvel at the intricate facade of St. Mark's Basilica.", icon: "Landmark", image: "https://images.unsplash.com/photo-1565422628235-c263cff1b798?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", infoId: "st_marks" }, { time: "19:00", title: "Cicchetti & Wine", description: "Experience a traditional Venetian evening with 'cicchetti' (small snacks) and local wine.", icon: "Grape", image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 2, date: "2026-05-31", city: "Verona & Milan", title: "Cities of Romance and Fashion", theme: "From Shakespearean Courtyards to Gothic Spires", mapQuery: "Duomo di Milano, Milan, Italy", events: [{ time: "09:00", title: "Train to Verona", description: "Visit Juliet's House and the impressive Roman Arena.", icon: "Train", image: "https://images.unsplash.com/photo-1588235677847-9d76b911e344?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "15:00", title: "Onward to Milan", description: "Continue by train to Italy's fashion capital.", icon: "Train", image: "https://images.unsplash.com/photo-1513581166391-8278bf3d8033?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "17:00", title: "Duomo di Milano", description: "Witness the breathtaking scale and detail of Milan's magnificent Gothic cathedral.", icon: "Church", image: "https://images.unsplash.com/photo-1583833408799-a3f8a7844a43?q=80&w=2853&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", infoId: "duomo_milano" }, { time: "20:00", title: "Dinner in Navigli", description: "Enjoy dinner along the canals of the trendy Navigli district.", icon: "UtensilsCrossed", image: "https://images.unsplash.com/photo-1559018448-f29373981504?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 3, date: "2026-06-01", city: "Chamonix", title: "At the Foot of Mont Blanc", theme: "Gateway to the French Alps", mapQuery: "Chamonix, France", events: [{ time: "09:00", title: "Travel to Chamonix", description: "A scenic journey takes you from Milan into the stunning Chamonix Valley.", icon: "Bus", image: "https://images.unsplash.com/photo-1519045338429-548489069588?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "14:00", title: "Aiguille du Midi", description: "Ascend to the top of the Aiguille du Midi for panoramic views of Mont Blanc.", icon: "CableCar", image: "https://images.unsplash.com/photo-1559983486-3987159d54b6?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", infoId: "aiguille_du_midi" }, { time: "17:00", title: "Explore Chamonix Town", description: "Stroll through the charming alpine town, a hub for mountaineers.", icon: "Walk", image: "https://images.unsplash.com/photo-1582883391851-a2b16bf1b2c6?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 4, date: "2026-06-02", city: "Zermatt", title: "The Iconic Matterhorn", theme: "Car-Free Village & Alpine Majesty", mapQuery: "Zermatt, Switzerland", events: [{ time: "10:00", title: "Transfer to Zermatt", description: "Travel to the idyllic, car-free village of Zermatt.", icon: "Train", image: "https://images.unsplash.com/photo-1606323428238-bef2b5a5b565?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "14:00", title: "Gornergrat Railway", description: "Take the historic cogwheel railway up the Gornergrat for the most famous view of the Matterhorn.", icon: "Train", image: "https://images.unsplash.com/photo-1579824213032-34a9461f8d48?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", infoId: "zermatt_matterhorn" }, { time: "17:00", title: "Zermatt Village Walk", description: "Discover the old wooden chalets and sophisticated charm of Zermatt.", icon: "Home", image: "https://images.unsplash.com/photo-1580556241036-92854955a6d5?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 5, date: "2026-06-03", city: "Interlaken", title: "The Two Lakes of Interlaken", theme: "Castles, Caves, and Scenic Vistas", mapQuery: "Interlaken, Switzerland", events: [ { time: "09:00", title: "Spiez Castle", description: "Travel to Spiez and admire its medieval castle, which sits elegantly on the shore of Lake Thun.", icon: "Castle", image: "https://images.unsplash.com/photo-1594392237891-7501a35014e9?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "11:00", title: "St. Beatus Caves", description: "Explore the impressive limestone cave system of St. Beatus, complete with underground waterfalls and illuminated pathways.", icon: "Mountain", image: "https://images.unsplash.com/photo-1500329826359-a89966270524?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "14:00", title: "Harder Kulm", description: "Take the steep funicular up to Harder Kulm for spectacular panoramic views over Interlaken, Lake Thun, and Lake Brienz.", icon: "Train", image: "https://images.unsplash.com/photo-1601923296499-233077e774a3?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "16:30", title: "Iseltwald & Lake Brienz", description: "Visit the picturesque fishing village of Iseltwald on the tranquil, turquoise shores of Lake Brienz.", icon: "Ship", image: "https://images.unsplash.com/photo-1662963381838-34907b205a2d?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" } ]},
+                        { day: 6, date: "2026-06-04", city: "Grindelwald", title: "Heart of the Jungfrau Region", theme: "Glaciers, Peaks, and Alpine Views", mapQuery: "Grindelwald, Switzerland", events: [{ time: "10:00", title: "Grindelwald First", description: "Ascend to Grindelwald First via cable car and experience the thrilling First Cliff Walk.", icon: "CableCar", image: "https://images.unsplash.com/photo-1539635278553-8d693da9a4ba?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "12:30", title: "Hike to Bachalpsee", description: "Enjoy a classic alpine hike to Bachalpsee, the 'blue jewel' of the Alps, for stunning reflections.", icon: "Hiking", image: "https://images.unsplash.com/photo-1541434991498-847207449581?q=80&w=2936&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "15:00", title: "Männlichen", description: "Take the gondola to Männlichen and walk the 'Royal Walk' for panoramic views of the Eiger, Mönch, and Jungfrau.", icon: "Crown", image: "https://images.unsplash.com/photo-1588432399625-542b245a985a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "17:00", title: "Train to Kleine Scheidegg", description: "Descend via the scenic railway to Kleine Scheidegg, a mountain pass with historic hotels and dramatic views.", icon: "Train", image: "https://images.unsplash.com/photo-1506520772-a42168354437?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 7, date: "2026-06-05", city: "Lauterbrunnen Valley", title: "Valley of 72 Waterfalls", theme: "Waterfalls, Car-Free Villages & Panoramas", mapQuery: "Lauterbrunnen, Switzerland", events: [{ time: "09:30", title: "Lauterbrunnen & Staubbach Falls", description: "Explore the dramatic Lauterbrunnen Valley and its iconic Staubbach Falls.", icon: "Droplets", image: "https://images.unsplash.com/photo-1528172655381-88b73373c242?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "11:00", title: "Wengen", description: "Take the train up to the sunny, car-free village of Wengen for beautiful walks and classic Swiss scenery.", icon: "Sun", image: "https://images.unsplash.com/photo-1605835900593-f542483171a5?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "14:00", title: "Mürren", description: "Cross the valley to Mürren, another charming car-free village perched on a cliff.", icon: "Mountain", image: "https://images.unsplash.com/photo-1599452796191-2090d1645398?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "16:00", title: "Schynige Platte", description: "Ride a vintage cogwheel train to the Schynige Platte Alpine Garden for breathtaking views and botanical trails.", icon: "Flower", image: "https://images.unsplash.com/photo-1628171691999-239616d47055?q=80&w=2864&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 8, date: "2026-06-06", city: "Lucerne & Innsbruck", title: "Crossing into Austria", theme: "Swiss Charm and Tyrolean Capital", mapQuery: "Innsbruck, Austria", events: [{ time: "09:00", title: "Morning in Lucerne", description: "Enjoy a final Swiss morning exploring Lucerne's Old Town or walking across the Chapel Bridge.", icon: "Bridge", image: "https://images.unsplash.com/photo-1572223843825-f7b57b112d7c?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "12:00", title: "Scenic Train to Innsbruck", description: "Embark on a spectacular train journey through the Alps from Switzerland into Austria.", icon: "Train", image: "https://images.unsplash.com/photo-1506520772-a42168354437?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "17:00", title: "Innsbruck's Golden Roof", description: "Arrive in Innsbruck and visit the famous Golden Roof in the heart of the historic old town.", icon: "Award", image: "https://images.unsplash.com/photo-1563204787-846387f39c23?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 9, date: "2026-06-07", city: "Salzburg", title: "A Symphony of Sights", theme: "Mozart, Mirabell, and Fortress Views", mapQuery: "Salzburg, Austria", events: [{ time: "09:30", title: "Travel to Salzburg", description: "Journey to Salzburg, the birthplace of Mozart and setting for 'The Sound of Music'.", icon: "Bus", image: "https://images.unsplash.com/photo-1628178229061-e2c84218d4d4?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "13:00", title: "Hohensalzburg Fortress", description: "Take the funicular up to the Hohensalzburg Fortress for commanding views of the city and Alps.", icon: "Castle", image: "https://images.unsplash.com/photo-1580975253894-32b0a99395f1?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "15:30", title: "Mirabell Gardens", description: "Stroll through the immaculate Mirabell Gardens, famous for their geometric designs.", icon: "Sprout", image: "https://images.unsplash.com/photo-1541834289947-3531b28e6789?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "18:00", title: "Dinner in the Old Town", description: "Enjoy a traditional Austrian dinner in the charming, UNESCO-listed Altstadt (Old Town).", icon: "UtensilsCrossed", image: "https://images.unsplash.com/photo-1581456495146-65a713959648?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 10, date: "2026-06-08", city: "Hallstatt & Český Krumlov", title: "Fairytale Villages", theme: "Lakeside Beauty and Bohemian Charm", mapQuery: "Český Krumlov, Czechia", events: [{ time: "09:00", title: "Day trip to Hallstatt", description: "Travel to the iconic lakeside village of Hallstatt, nestled in the Salzkammergut region.", icon: "Ship", image: "https://images.unsplash.com/photo-1528164344705-47542687000d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", infoId: "hallstatt" }, { time: "14:00", title: "Journey to Český Krumlov", description: "Cross the border into the Czech Republic to the stunning medieval town of Český Krumlov.", icon: "Bus", image: "https://images.unsplash.com/photo-1594212975317-b039d33b438b?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "17:00", title: "Explore Český Krumlov", description: "Get lost in the cobblestone streets and marvel at the castle that dominates the town.", icon: "Fort", image: "https://images.unsplash.com/photo-1582264284523-9a39a3f24523?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 11, date: "2026-06-09", city: "Prague", title: "The Golden City", theme: "Bridges, Castles, and Astronomical Clocks", mapQuery: "Prague, Czechia", events: [{ time: "10:00", title: "Travel to Prague", description: "Arrive in Prague, the 'City of a Hundred Spires'.", icon: "Bus", image: "https://images.unsplash.com/photo-1593181829424-a3f6556195a6?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "14:00", title: "Charles Bridge & Old Town", description: "Walk across the iconic Charles Bridge and explore the Old Town Square with its Astronomical Clock.", icon: "Clock", image: "https://images.unsplash.com/photo-1560007817-5a1a1f4b2323?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", infoId: "prague" }, { time: "17:00", title: "Prague Castle", description: "Visit the vast Prague Castle complex, a collection of palaces, churches, and gardens.", icon: "Castle", image: "https://images.unsplash.com/photo-1595105436695-2122d20b7f65?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 12, date: "2026-06-10", city: "Vienna", title: "Imperial Elegance", theme: "Palaces, Coffee Houses, and Classical Music", mapQuery: "Vienna, Austria", events: [{ time: "10:00", title: "Train to Vienna", description: "Travel to Vienna, Austria's imperial capital.", icon: "Train", image: "https://images.unsplash.com/photo-1583329883501-f25158c639b7?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "14:00", title: "Hofburg Palace", description: "Explore the Hofburg Palace, the former residence of the Habsburg emperors.", icon: "Landmark", image: "https://images.unsplash.com/photo-1616629399839-84724a1e967a?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "16:30", title: "Viennese Coffee House", description: "Experience traditional Viennese culture with a coffee and a slice of Sachertorte.", icon: "Coffee", image: "https://images.unsplash.com/photo-1511920183318-9d614f0a99a4?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "19:00", title: "Evening Concert", description: "Enjoy an evening of classical music in one of Vienna's historic venues.", icon: "Music", image: "https://images.unsplash.com/photo-1598387999829-92f753c12a7a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 13, date: "2026-06-11", city: "Graz & Lake Bled", title: "Austrian Charm & Slovenian Jewel", theme: "Clocktowers and Emerald Lakes", mapQuery: "Lake Bled, Slovenia", events: [{ time: "09:00", title: "Explore Graz", description: "Visit Graz, with its famous clock tower (Uhrturm) and charming old town.", icon: "Clock", image: "https://images.unsplash.com/photo-1604759422001-1b94b0965287?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "14:00", title: "Travel to Lake Bled", description: "Cross into Slovenia and arrive at the breathtaking Lake Bled.", icon: "Bus", image: "https://images.unsplash.com/photo-1597891238981-d417a942a78a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "17:00", title: "Pletna Boat to Bled Island", description: "Take a traditional Pletna boat to the island in the middle of the lake and ring the wishing bell.", icon: "Ship", image: "https://images.unsplash.com/photo-1616499386221-3f4159518d6a?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 14, date: "2026-06-12", city: "Dolomites", title: "Seceda & Val di Funes", theme: "Jagged Peaks and Rolling Hills", mapQuery: "Seceda, Ortisei, South Tyrol, Italy", events: [{ time: "10:00", title: "Enter the Dolomites", description: "Journey into the heart of the Dolomites, a UNESCO World Heritage site.", icon: "Mountain", image: "https://images.unsplash.com/photo-1537220038038-01d64387877c?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "13:00", title: "Seceda Ridgeline", description: "Take the cable car to Seceda for its iconic, dramatic ridgeline view.", icon: "CableCar", image: "https://images.unsplash.com/photo-1585809931853-b08493736569?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", infoId: "dolomites" }, { time: "16:00", title: "St. Johann in Ranui", description: "Photograph the famous little church of St. Johann in the beautiful Val di Funes.", icon: "Camera", image: "https://images.unsplash.com/photo-1560447548-a7342f5344d1?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 15, date: "2026-06-13", city: "Dolomites", title: "Tre Cime & Lago di Braies", theme: "Iconic Peaks and Emerald Lakes", mapQuery: "Tre Cime di Lavaredo, Auronzo di Cadore, Belluno, Italy", events: [{ time: "09:00", title: "Hike around Tre Cime di Lavaredo", description: "Complete the classic hiking loop around the three iconic peaks of Tre Cime.", icon: "Hiking", image: "https://images.unsplash.com/photo-1506146332389-18140dc7b24a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "15:00", title: "Lago di Braies", description: "Visit the stunning Lago di Braies, rent a rowboat, and soak in the scenery.", icon: "Boat", image: "https://images.unsplash.com/photo-1508532134237-6c4a867c2936?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 16, date: "2026-06-14", city: "Dolomites", title: "Alpe di Siusi", theme: "Europe's Largest Alpine Meadow", mapQuery: "Alpe di Siusi, Castelrotto, South Tyrol, Italy", events: [{ time: "10:00", title: "Cable Car to Alpe di Siusi", description: "Ascend to the vast, rolling pasture of Alpe di Siusi (Seiser Alm).", icon: "CableCar", image: "https://images.unsplash.com/photo-1619566539243-b9395b7b2b46?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "12:00", title: "Meadow Exploration", description: "Enjoy gentle hikes or an e-bike ride across the meadows, with the Sciliar and Sassolungo peaks as your backdrop.", icon: "Bike", image: "https://images.unsplash.com/photo-1584288018593-3d44f762a26c?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "17:00", title: "Relax and Unwind", description: "Enjoy the peaceful atmosphere and Tyrolean hospitality of the region.", icon: "Home", image: "https://images.unsplash.com/photo-1590457635697-a0833a6f6f96?q=80&w=2862&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 17, date: "2026-06-15", city: "Dolomites", title: "Passo Giau & Cinque Torri", theme: "Mountain Passes and Open-Air Museums", mapQuery: "Passo Giau, Colle Santa Lucia, Belluno, Italy", events: [{ time: "10:00", title: "Drive to Passo Giau", description: "Drive over the stunning Passo Giau, one of the most beautiful passes in the Dolomites.", icon: "Car", image: "https://images.unsplash.com/photo-1590529369344-33d2319d9c79?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "12:00", title: "Explore Cinque Torri", description: "Hike around the unique rock formations of Cinque Torri and explore the World War I open-air museum.", icon: "Telescope", image: "https://images.unsplash.com/photo-1505765055279-9e133a8713c2?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "16:00", title: "Farewell Dinner", description: "Enjoy a final, memorable dinner in the heart of the mountains.", icon: "UtensilsCrossed", image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] },
+                        { day: 18, date: "2026-06-16", city: "Venice", title: "Finale and Departure", theme: "Arrivederci, Italia!", mapQuery: "Venice Marco Polo Airport", events: [{ time: "11:00", title: "Return to Venice", description: "Enjoy a final scenic drive back towards Venice.", icon: "Bus", image: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?q=80&w=2866&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }, { time: "15:00", title: "Departure", description: "Transfer to Venice Marco Polo Airport (VCE) for your departure.", icon: "Plane", image: "https://images.unsplash.com/photo-1534430480872-741464a4714d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }] }
+                    ],
+                    expertInfo: {
+                        "st_marks": { title: "St. Mark's Basilica", summary: "The cathedral church of the Roman Catholic Archdiocese of Venice, it is the most famous of the city's churches and a perfect example of Italo-Byzantine architecture.", details: [{ title: "History & Mosaics", content: "Known as the 'Church of Gold' for its opulent design and shimmering gold mosaics that cover over 8,000 square meters of the interior." }, { title: "Expert Tips", content: "Book a 'skip-the-line' ticket online to avoid immense queues. A dress code is strictly enforced: shoulders and knees must be covered." }] },
+                        "duomo_milano": { title: "Duomo di Milano", summary: "The largest church in Italy, the Duomo took nearly six centuries to complete. Its distinctive spires and statues dominate the Milan skyline.", details: [{ title: "Rooftop Terraces", content: "A must-do is taking the elevator or climbing the stairs to the rooftop terraces. You can walk among the forest of spires and get an up-close look at the Madonnina." }, { title: "Expert Tips", content: "Your ticket to the Duomo can also include the Duomo Museum and the archaeological area. Be prepared for a security check before entering." }] },
+                        "aiguille_du_midi": { title: "Aiguille du Midi", summary: "A 3,842-meter-high mountain in the Mont Blanc massif. The cable car to its summit is one of the highest in the world.", details: [{ title: "'Step into the Void'", content: "For thrill-seekers, 'Step into the Void' is a glass box with a glass floor, suspended over a 1,000-meter precipice." }, { title: "Expert Tips", content: "Go on a clear day for the best views. The altitude can affect some people, so move slowly and stay hydrated. Book tickets in advance during peak season." }] },
+                        "zermatt_matterhorn": { title: "Zermatt & The Matterhorn", summary: "The Matterhorn is one of the world's most recognizable peaks. The charming, car-free village of Zermatt at its base is the perfect hub for exploring.", details: [{ title: "Viewing the Matterhorn", content: "The Gornergrat railway offers a classic postcard view. For other perspectives, consider the Matterhorn Glacier Paradise or a hike to the Stellisee lake." }, { title: "Expert Tips", content: "Zermatt is car-free; you must park in Täsch and take a shuttle train. The weather can change rapidly, so be prepared with layers." }] },
+                        "hallstatt": { title: "Hallstatt", summary: "A spectacular lakeside village in Austria's Salzkammergut region, known for its picturesque 16th-century alpine houses and salt production history.", details: [{ title: "Five Fingers Lookout", content: "For an incredible view, take the Dachstein Krippenstein cable car up to the 5fingers viewing platform, which juts out over a 400m drop." }, { title: "Expert Tips", content: "The village is extremely popular and can be crowded. Visit early in the morning or late in the afternoon to avoid the biggest tour groups."}] },
+                        "prague": { title: "Prague", summary: "The capital of the Czech Republic is a political, cultural, and economic hub of central Europe, with a history going back a millennium.", details: [{ title: "Beyond the Main Sights", content: "While the Castle and Charles Bridge are must-sees, consider exploring the Lesser Town (Malá Strana) or the vibrant Jewish Quarter for a deeper look into the city's history." }, { title: "Expert Tips", content: "The local currency is the Czech Koruna (CZK). While many places in the center accept Euros, you will get a better rate by paying in the local currency."}] },
+                        "dolomites": { title: "The Dolomites", summary: "A mountain range located in northeastern Italy, a UNESCO World Heritage site, famous for its pale, vertical rock faces that glow at sunrise and sunset.", details: [{ title: "Enrosadira", content: "The unique pink/red glow of the mountains at sunrise and sunset is a phenomenon known as 'Enrosadira'. It's a must-see for any visitor." }, { title: "Expert Tips", content: "The region is best explored by car to have flexibility. Many mountain passes have specific opening/closing times, so check in advance. A local 'Gardena Card' or similar pass can offer great value for cable cars."}] }
+                    }
+                }
+            ]
+        };
+    </script>
+
+    <!-- Design System & Print Engine -->
+    <style>
+        :root { --font-display: 'Playfair Display', serif; --font-body: 'Inter', sans-serif; --bg-color: #F9F9F8; --text-color: #2D2D2D; --text-color-muted: #6B7280; --accent-color: #7A8471; --card-bg: #FFFFFF; --border-color: #F0F0F0; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-body); line-height: 1.6; }
+        .font-display { font-family: var(--font-display); }
+        .glassmorphism { background-color: rgba(255, 255, 255, 0.7); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-color: rgba(239, 239, 239, 0.5); }
+        
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: white; }
+            .no-print { display: none !important; }
+            #print-container { display: block !important; padding: 1.5rem; }
+            #app-root, #nav-container { display: none !important; }
+            .print-page { page-break-before: always; border-top: 1px solid var(--border-color); padding-top: 2rem; }
+            .print-page:first-child { page-break-before: avoid; border-top: none; padding-top: 0; }
+            .print-card { page-break-inside: avoid; border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+        }
+    </style>
 </head>
-<body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+<body class="antialiased pb-32">
+
+    <div id="app-root"></div>
+    <div id="nav-container" class="no-print"></div>
+
+    <!-- Application Logic -->
+    <script>
+        const AppState = { currentView: 'home', activeTripId: null, activeDay: null, activeInfoId: null };
+        const AppRoot = document.getElementById('app-root');
+        const NavContainer = document.getElementById('nav-container');
+
+        const Components = {
+            Home: {
+                render: () => {
+                    const featuredTrip = TRAVEL_DATA.trips[0];
+                    const otherTrips = TRAVEL_DATA.trips.slice(1);
+
+                    return `
+                        <div class="relative h-[80vh] min-h-[500px] flex items-center justify-center text-white text-center p-6 overflow-hidden">
+                            <div class="absolute inset-0 bg-black opacity-40 z-10"></div>
+                            <img src="${featuredTrip.coverImage}" alt="${featuredTrip.title}" class="absolute inset-0 w-full h-full object-cover transform scale-105">
+                            <div class="relative z-20">
+                                <p class="text-sm uppercase tracking-widest">Featured Expedition</p>
+                                <h1 class="text-5xl md:text-7xl font-display font-bold mt-4 mb-6 leading-tight shadow-lg">${featuredTrip.title}</h1>
+                                <p class="text-xl md:text-2xl max-w-3xl mx-auto">${featuredTrip.subtitle}</p>
+                                <button onclick="Router.navigate('dashboard', { tripId: '${featuredTrip.id}' })" class="mt-10 px-8 py-4 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-colors duration-300 transform hover:scale-105">
+                                    Explore This Journey
+                                </button>
+                            </div>
+                        </div>
+                        ${otherTrips.length > 0 ? `
+                        <div class="p-6 md:p-12">
+                            <h2 class="text-3xl font-display font-bold">Other Journeys</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+                                ${otherTrips.map(trip => `
+                                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer group" onclick="Router.navigate('dashboard', { tripId: '${trip.id}' })">
+                                        <div class="overflow-hidden h-64"><img src="${trip.coverImage}" alt="${trip.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"></div>
+                                        <div class="p-6">
+                                            <p class="text-sm text-gray-500">${new Date(trip.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })} &bull; ${trip.duration} Days</p>
+                                            <h2 class="text-2xl font-bold font-display mt-2">${trip.title}</h2>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>` : ''}
+                    `;
+                }
+            },
+            Dashboard: {
+                render: (trip) => `
+                    <div class="p-6">
+                        <button onclick="Router.navigate('home')" class="flex items-center text-sm font-semibold text-gray-600 hover:text-black mb-6 no-print"><i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i>Back to Library</button>
+                        <header class="pb-4">
+                            <h1 class="text-4xl md:text-5xl font-display font-bold">${trip.title}</h1>
+                            <p class="text-lg text-gray-500 mt-1">${trip.subtitle}</p>
+                        </header>
+                        <div class="mt-6 space-y-8">
+                            <div class="bg-white rounded-2xl shadow-lg p-6 cursor-pointer" onclick="Router.navigate('itinerary', { tripId: trip.id })">
+                                <h3 class="font-bold font-display text-2xl">Smart Itinerary</h3>
+                                <div class="mt-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                                    ${trip.summary.slice(0, 12).map(s => `
+                                        <div class="bg-gray-50 p-3 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onclick="event.stopPropagation(); Router.navigate('dayDetail', { tripId: '${trip.id}', day: ${s.day} })">
+                                            <p class="font-semibold text-sm">Day ${s.day}</p>
+                                            <p class="text-xs text-gray-500 truncate">${s.city}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <p class="text-sm text-accent-color font-semibold mt-4">View Full Itinerary &rarr;</p>
+                            </div>
+                            <div class="bg-white rounded-2xl shadow-lg p-6">
+                                <h3 class="font-bold font-display text-2xl">Global Map</h3>
+                                <div class="mt-4 w-full h-80 rounded-xl overflow-hidden">
+                                    <!-- IMPORTANT: Replace YOUR_API_KEY with your actual Google Maps API key -->
+                                    <iframe src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=Jungfrau+Region,+Switzerland" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+            },
+            ItineraryGrid: {
+                render: (trip) => `
+                    <div class="p-6">
+                        <button onclick="Router.navigate('dashboard', { tripId: trip.id })" class="flex items-center text-sm font-semibold text-gray-600 hover:text-black mb-6 no-print"><i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i>Back to Dashboard</button>
+                        <header class="pb-4">
+                            <h1 class="text-4xl font-display font-bold">Itinerary</h1>
+                            <p class="text-lg text-gray-500 mt-1">${trip.title}</p>
+                        </header>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+                            ${trip.itinerary.map(day => `
+                                <div class="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer group" onclick="Router.navigate('dayDetail', { tripId: '${trip.id}', day: ${day.day} })">
+                                    <div class="p-5">
+                                        <p class="font-semibold text-accent-color">Day ${day.day}</p>
+                                        <h2 class="text-xl font-bold font-display mt-1">${day.city}</h2>
+                                        <p class="text-sm text-gray-500 truncate mt-1">${day.title}</p>
+                                        <p class="text-xs text-blue-600 font-semibold mt-4 group-hover:underline">View Details &rarr;</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `
+            },
+            DayDetail: {
+                render: (trip, day) => {
+                    const mapQuery = encodeURIComponent(day.mapQuery || day.city);
+                    return `
+                    <div class="p-6">
+                        <button onclick="Router.navigate('itinerary', { tripId: '${trip.id}' })" class="flex items-center text-sm font-semibold text-gray-600 hover:text-black mb-6 no-print"><i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i>Full Itinerary</button>
+                        <header class="pb-4">
+                            <p class="font-semibold text-accent-color">Day ${day.day} &bull; ${new Date(day.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</p>
+                            <h1 class="text-4xl md:text-5xl font-display font-bold">${day.city}: ${day.title}</h1>
+                            <p class="text-lg text-gray-500 mt-1">${day.theme}</p>
+                        </header>
+                        <div class="mt-8 space-y-8">
+                            <div class="bg-white rounded-2xl shadow-lg p-4">
+                                <h3 class="font-bold font-display text-2xl mb-4 px-2">Daily Map</h3>
+                                <div class="w-full h-80 rounded-xl overflow-hidden">
+                                     <!-- IMPORTANT: Replace YOUR_API_KEY with your actual Google Maps API key -->
+                                     <iframe src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${mapQuery}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                </div>
+                            </div>
+                            <div>
+                            ${(day.events || []).map(event => `
+                                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                                    ${event.image ? `<img src="${event.image}" alt="${event.title}" class="w-full h-56 object-cover">` : ''}
+                                    <div class="p-6">
+                                        <div class="flex items-baseline gap-4">
+                                             <span class="font-bold text-gray-800">${event.time}</span>
+                                             <h3 class="font-bold text-xl text-gray-900">${event.title}</h3>
+                                        </div>
+                                        <p class="text-gray-600 mt-2">${event.description}</p>
+                                        ${event.infoId ? `<button onclick="event.stopPropagation(); Router.navigate('info', { tripId: '${trip.id}', infoId: '${event.infoId}' })" class="mt-4 text-accent-color font-semibold text-sm">View Expert Info &rarr;</button>` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                }
+            },
+            Info: {
+                render: (trip, info) => `
+                    <div class="p-6">
+                        <button onclick="history.back()" class="flex items-center text-sm font-semibold text-gray-600 hover:text-black mb-8 no-print"><i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i>Back</button>
+                        <header>
+                            <h1 class="text-4xl md:text-5xl font-display font-bold">${info.title}</h1>
+                            <p class="text-lg text-gray-500 mt-2">${info.summary}</p>
+                        </header>
+                        <div class="mt-8 space-y-6">
+                            ${info.details.map(detail => `
+                                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                                    <h2 class="text-xl font-bold font-display">${detail.title}</h2>
+                                    <p class="text-gray-700 leading-relaxed mt-2">${detail.content}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`
+            },
+            Navbar: {
+                render: (tripId) => {
+                    const navItems = [
+                        { id: 'home', label: 'Library', icon: 'Library', params: {} },
+                        { id: 'itinerary', label: 'Itinerary', icon: 'ListChecks', params: { tripId } },
+                        { id: 'map', label: 'Map', icon: 'Map', params: { tripId } },
+                        { id: 'info', label: 'Info', icon: 'BookOpen', params: { tripId } },
+                    ];
+                    return `
+                        <div class="fixed bottom-0 left-0 right-0 h-24 no-print">
+                             <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm h-16 glassmorphism border rounded-2xl flex items-center justify-around shadow-2xl shadow-gray-300/30">
+                                ${navItems.map(item => `
+                                    <button onclick="Router.navigate('${item.id}', ${JSON.stringify(item.params)})" class="flex flex-col items-center justify-center w-16 h-16 rounded-xl ${!tripId && item.id !== 'home' ? 'opacity-30 cursor-not-allowed' : 'text-gray-700 hover:text-accent-color'} ${AppState.currentView === item.id || (AppState.currentView === 'dayDetail' && item.id === 'itinerary') ? 'text-accent-color' : ''}" ${!tripId && item.id !== 'home' ? 'disabled' : ''}>
+                                        <i data-lucide="${item.icon}"></i>
+                                        <span class="text-xs mt-1 font-medium">${item.label}</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <button onclick="window.print()" class="no-print fixed bottom-28 right-5 w-14 h-14 bg-accent-color text-white rounded-full shadow-2xl shadow-accent-color/30 flex items-center justify-center hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-accent-color focus:ring-opacity-50 transition-transform hover:scale-105">
+                            <i data-lucide="printer"></i>
+                        </button>
+                    `;
+                }
+            },
+            PrintView: {
+                render: (trip) => {
+                    let html = `<div id="print-container" class="hidden"><header class="text-center py-8 print-page"><h1 class="text-5xl font-display font-bold">${trip.title}</h1><p class="text-2xl text-gray-500 mt-2">${trip.subtitle}</p><p class="mt-4">${new Date(trip.startDate).toLocaleDateString('en-US', { dateStyle: 'long' })} &bull; ${trip.duration} Days</p></header>`;
+                    trip.itinerary.forEach(day => {
+                        html += `<section class="print-page"><header><p class="text-sm font-semibold text-accent-color">Day ${day.day} &bull; ${day.date}</p><h2 class="text-3xl font-display font-bold">${day.title}</h2><p class="text-lg text-gray-600">${day.theme}</p></header>`;
+                        (day.events || []).forEach(event => {
+                            html += `<div class="print-card"><p class="font-bold text-gray-500">${event.time}</p><h3 class="text-xl font-bold mt-1">${event.title}</h3><p class="text-gray-700 mt-2">${event.description}</p></div>`;
+                            if(event.infoId && trip.expertInfo && trip.expertInfo[event.infoId]) {
+                                const info = trip.expertInfo[event.infoId];
+                                html += `<div class="print-card bg-gray-50"><h4 class="text-lg font-bold font-display">${info.title} - Expert Info</h4><p class="mt-2 text-sm text-gray-600">${info.summary}</p>${(info.details || []).map(d => `<div class="mt-4"><h5 class="font-bold text-base">${d.title}</h5><p class="text-sm text-gray-700">${d.content}</p></div>`).join('')}</div>`;
+                            }
+                        });
+                        html += `</section>`;
+                    });
+                    html += `</div>`;
+                    return html;
+                }
+            }
+        };
+
+        const Router = {
+            navigate: (view, params = {}) => {
+                AppState.currentView = view;
+                AppState.activeTripId = params.tripId || AppState.activeTripId;
+                AppState.activeDay = params.day || null;
+                AppState.activeInfoId = params.infoId || null;
+
+                window.scrollTo(0, 0);
+                Render.app();
+            }
+        };
+
+        const Render = {
+            app: () => {
+                const trip = AppState.activeTripId ? TRAVEL_DATA.trips.find(t => t.id === AppState.activeTripId) : null;
+                let viewHtml = '';
+
+                try {
+                    switch (AppState.currentView) {
+                        case 'dashboard':
+                            viewHtml = trip ? Components.Dashboard.render(trip) : Components.Home.render();
+                            break;
+                        case 'itinerary':
+                            viewHtml = trip ? Components.ItineraryGrid.render(trip) : Components.Home.render();
+                            break;
+                        case 'dayDetail':
+                            const day = trip && AppState.activeDay ? trip.itinerary.find(d => d.day === AppState.activeDay) : null;
+                            viewHtml = trip && day ? Components.DayDetail.render(trip, day) : (trip ? Components.ItineraryGrid.render(trip) : Components.Home.render());
+                            break;
+                        case 'info':
+                            const info = trip && AppState.activeInfoId ? trip.expertInfo[AppState.activeInfoId] : null;
+                            viewHtml = trip && info ? Components.Info.render(trip, info) : Components.Home.render();
+                            break;
+                        case 'map':
+                             viewHtml = `<div class="p-6 text-center"><h1 class="text-3xl font-display font-bold">Global Map</h1><p class="text-gray-500">Map view for ${trip ? trip.title : ''}</p></div>`;
+                             break;
+                        default:
+                            viewHtml = Components.Home.render();
+                    }
+                } catch (error) {
+                    console.error("Render Error:", error);
+                    viewHtml = `<div class="p-8 text-center text-red-500"><h2 class="font-bold text-2xl">A Critical Error Occurred</h2><p>Could not render view: ${AppState.currentView}</p><pre class="mt-4 text-left text-sm bg-red-100 p-4 rounded">${error.stack}</pre></div>`;
+                }
+                
+                AppRoot.innerHTML = viewHtml;
+                Render.navbar(AppState.activeTripId);
+
+                if (trip && !document.getElementById('print-container')) {
+                    document.body.insertAdjacentHTML('beforeend', Components.PrintView.render(trip));
+                }
+                
+                lucide.createIcons();
+            },
+            navbar: (tripId) => {
+                NavContainer.innerHTML = Components.Navbar.render(tripId);
+                lucide.createIcons();
+            }
+        };
+        
+        // Initial Load
+        document.addEventListener('DOMContentLoaded', () => {
+            Render.app();
+        });
+
+    </script>
 </body>
 </html>

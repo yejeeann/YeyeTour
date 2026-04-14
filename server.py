@@ -197,10 +197,10 @@ if __name__ == "__main__":
     print("--- Travel Master Control Program Server (Open-Source Edition) ---")
     print("API 문서는 서버 시작 후 http://127.0.0.1:8000/docs 에서 확인하세요.")
     print("\n테스트용 cURL 명령어:")
-    print("curl -X POST \"
-          " http://127.0.0.1:8000/plan_daily_trip \"
-          " -H 'Content-Type: application/json' \"
-          " -d '{ "city": "로마", "date": "2024-10-26", "attractions": ["콜로세움", "바티칸 미술관"] }'")
+    # 아래의 print문을 삼중 따옴표로 수정하여 SyntaxError를 해결했습니다.
+    print("""curl -X POST \
+      http://127.0.0.1:8000/plan_daily_trip \
+      -H 'Content-Type: application/json' \
+      -d '{"city": "로마", "date": "2024-10-26", "attractions": ["콜로세움", "바티칸 미술관"]}'""")
     
     uvicorn.run("server:mcp_app", host="0.0.0.0", port=8000, reload=True)
-

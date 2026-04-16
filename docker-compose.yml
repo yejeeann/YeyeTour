@@ -1,0 +1,15 @@
+services:
+  yeye-tour-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yeye-tour-mcp
+    environment:
+      MCP_TRANSPORT: streamable-http
+      HOST: 0.0.0.0
+      PORT: 8000
+      DEFAULT_COUNTRY_CODE: it
+      BRAVE_API_KEY: ${BRAVE_API_KEY:-}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

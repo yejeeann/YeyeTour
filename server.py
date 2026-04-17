@@ -1111,17 +1111,24 @@ async def generate_map_links(
 
 def main() -> None:
     transport = os.getenv("MCP_TRANSPORT", "streamable-http").strip().lower()
-    if transport == "stdio":
-        mcp.run()
-        return
-
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", "8000"))
     try:
         mcp.run(transport="streamable-http", host=host, port=port)
     except TypeError:
         mcp.run(transport="streamable-http")
-
+        
+    if transport == "stdio":
+        mcp.run()
+        return
+    else:
+        # streamable-http와 sse 모두 아래 방식으로 호스트 바인딩이 가능합니다.
+        # 에러가 난다면 except로 숨기지 말고 로그를 찍어야 원인을 알 수 있습니다.
+        mcp.run(
+            transport=transport,
+            host=host,
+            port=port
+        )
 
 if __name__ == "__main__":
     main()

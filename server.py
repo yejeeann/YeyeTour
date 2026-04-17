@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import math
 import os
 from copy import deepcopy
@@ -9,6 +10,9 @@ from urllib.parse import quote
 
 import httpx
 from mcp.server.fastmcp import FastMCP
+from starlette.applications import Starlette
+from starlette.responses import HTMLResponse, JSONResponse
+from starlette.routing import Mount, Route
 
 
 @dataclass(frozen=True)
@@ -766,6 +770,7 @@ mcp = FastMCP(
     instructions="Create rich travel plans, optimize routes, and return frontend-ready JSON for a digital guidebook.",
     stateless_http=True,
     json_response=True,
+    streamable_http_path="/",
 )
 
 
@@ -1109,26 +1114,143 @@ async def generate_map_links(
     }
 
 
+async def homepage(_request) -> HTMLResponse:
+    return HTMLResponse(
+        """
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>YeyeTour MCP Server</title>
+            <style>
+              :root {
+                color-scheme: light;
+                --bg: #f5efe4;
+                --card: #fffaf1;
+                --ink: #1d2a38;
+                --accent: #0f766e;
+                --muted: #586574;
+                --line: #d9cfbf;
+              }
+              * { box-sizing: border-box; }
+              body {
+                margin: 0;
+                font-family: Georgia, "Times New Roman", serif;
+                background:
+                  radial-gradient(circle at top left, rgba(15, 118, 110, 0.14), transparent 32%),
+                  linear-gradient(180deg, #f8f3ea 0%, var(--bg) 100%);
+                color: var(--ink);
+                min-height: 100vh;
+                display: grid;
+                place-items: center;
+                padding: 24px;
+              }
+              main {
+                width: min(760px, 100%);
+                background: rgba(255, 250, 241, 0.92);
+                border: 1px solid var(--line);
+                border-radius: 24px;
+                padding: 32px;
+                box-shadow: 0 24px 70px rgba(29, 42, 56, 0.08);
+              }
+              h1 {
+                margin: 0 0 12px;
+                font-size: clamp(2rem, 4vw, 3.2rem);
+                line-height: 1;
+              }
+              p {
+                margin: 0 0 14px;
+                font-size: 1.05rem;
+                line-height: 1.65;
+                color: var(--muted);
+              }
+              .pill {
+                display: inline-block;
+                margin-bottom: 16px;
+                padding: 7px 12px;
+                border-radius: 999px;
+                background: rgba(15, 118, 110, 0.1);
+                color: var(--accent);
+                font-size: 0.92rem;
+              }
+              ul {
+                margin: 18px 0 0;
+                padding-left: 20px;
+                color: var(--ink);
+              }
+              li { margin: 10px 0; }
+              code {
+                font-family: "SFMono-Regular", Consolas, monospace;
+                background: rgba(29, 42, 56, 0.06);
+                padding: 2px 6px;
+                border-radius: 6px;
+              }
+              a {
+                color: var(--accent);
+                text-decoration: none;
+              }
+              a:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            <main>
+              <div class="pill">YeyeTour MCP Server</div>
+              <h1>Server is running.</h1>
+              <p>
+                This service exposes a Streamable HTTP MCP endpoint for trip planning,
+                route optimization, attraction guides, and map link generation.
+              </p>
+              <ul>
+                <li>MCP endpoint: <code>/mcp</code></li>
+                <li>Health check: <code>/health</code></li>
+                <li>Recommended MCP URL: <a href="/mcp">/mcp</a></li>
+              </ul>
+            </main>
+          </body>
+        </html>
+        """
+    )
+
+
+async def healthcheck(_request) -> JSONResponse:
+    return JSONResponse(
+        {
+            "ok": True,
+            "service": "yeye-tour-mcp",
+            "transport": "streamable-http",
+            "mcp_endpoint": "/mcp",
+        }
+    )
+
+
+@contextlib.asynccontextmanager
+async def lifespan(_app: Starlette):
+    async with mcp.session_manager.run():
+        yield
+
+
+app = Starlette(
+    routes=[
+        Route("/", endpoint=homepage),
+        Route("/health", endpoint=healthcheck),
+        Mount("/mcp", app=mcp.streamable_http_app()),
+    ],
+    lifespan=lifespan,
+)
+
+
 def main() -> None:
     transport = os.getenv("MCP_TRANSPORT", "streamable-http").strip().lower()
-    host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", "8000"))
-    try:
-        mcp.run(transport="streamable-http", host=host, port=port)
-    except TypeError:
-        mcp.run(transport="streamable-http")
-        
     if transport == "stdio":
         mcp.run()
         return
-    else:
-        # streamable-http와 sse 모두 아래 방식으로 호스트 바인딩이 가능합니다.
-        # 에러가 난다면 except로 숨기지 말고 로그를 찍어야 원인을 알 수 있습니다.
-        mcp.run(
-            transport=transport,
-            host=host,
-            port=port
-        )
+
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", "8000"))
+    import uvicorn
+
+    uvicorn.run(app, host=host, port=port)
 
 if __name__ == "__main__":
     main()

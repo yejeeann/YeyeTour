@@ -18,6 +18,8 @@ docker compose up --build
 기본 MCP HTTP 엔드포인트:
 
 - `http://localhost:8000/mcp`
+- 브라우저 안내 페이지: `http://localhost:8000/`
+- 헬스 체크: `http://localhost:8000/health`
 
 ## 환경 변수
 

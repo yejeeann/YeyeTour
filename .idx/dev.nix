@@ -21,7 +21,11 @@
       enable = true;
       previews = {
         web = {
-          command = ["python3" "-m" "http.server" "$PORT" "--bind" "0.0.0.0"];
+          command = [
+            "bash"
+            "-lc"
+            "source .venv/bin/activate && HOST=0.0.0.0 PORT=$PORT python3 server.py"
+          ];
           manager = "web";
         };
       };
@@ -30,15 +34,23 @@
     workspace = {
       # Runs when a workspace is first created
       onCreate = {
-        # Example: install JS dependencies from NPM
-        # npm-install = "npm install";
+        setup-python = ''
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install -r requirements.txt
+        '';
         # Open editors for the following files by default, if they exist:
         default.openFiles = [ "style.css" "main.js" "index.html" ];
       };
       # Runs when the workspace is (re)started
       onStart = {
-        # Example: start a background task to watch and re-build backend code
-        # watch-backend = "npm run watch-backend";
+        ensure-venv = ''
+          if [ ! -d .venv ]; then
+            python3 -m venv .venv
+            source .venv/bin/activate
+            pip install -r requirements.txt
+          fi
+        '';
       };
     };
   };

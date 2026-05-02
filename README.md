@@ -38,6 +38,29 @@ pip install -r requirements.txt
 python server.py
 ```
 
+## 테스트 클라이언트
+
+로컬 서버 스모크 테스트:
+
+```bash
+source .venv/bin/activate
+python test_mcp_client.py
+```
+
+배포 서버 테스트:
+
+```bash
+source .venv/bin/activate
+python test_mcp_client.py --url https://travelmcp.yejeelee.synology.me/mcp
+```
+
+전체 툴 호출 테스트:
+
+```bash
+source .venv/bin/activate
+python test_mcp_client.py --full
+```
+
 ## 예시 입력
 
 `plan_trip` 예시:

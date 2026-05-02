@@ -1,4 +1,4 @@
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 
 # YeyeTour MCP 서버 인스턴스 생성
 mcp = FastMCP("YeyeTourServer")

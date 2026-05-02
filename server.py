@@ -1,4 +1,5 @@
 from mcp.server.fastmcp import FastMCP
+from wikipedia import get_wikipedia_summary
 
 # YeyeTour MCP 서버 인스턴스 생성
 mcp = FastMCP("YeyeTourServer")
@@ -28,15 +29,15 @@ def optimize_daily_route(locations: list[str]) -> str:
     return f"다음 장소들의 동선을 최적화했습니다: {', '.join(locations)}"
 
 @mcp.tool()
-def get_attraction_wiki(attraction_name: str) -> str:
+async def get_attraction_wiki(attraction_name: str) -> str:
     """
     관광지의 역사, 문화적 배경, 운영 시간, 꿀팁 등 상세 설명을 제공합니다.
     
     Args:
         attraction_name: 관광지 이름 (예: "Eiffel Tower")
     """
-    # TODO: 위키백과/관광지 정보 수집 로직 구현
-    return f"{attraction_name}에 대한 상세 정보입니다."
+    wiki_summary = await get_wikipedia_summary(attraction_name)
+    return f"{attraction_name}에 대한 위키백과 상세 정보:\n\n{wiki_summary}"
 
 @mcp.tool()
 def generate_map_links(route: list[str]) -> str:

@@ -100,9 +100,7 @@ def full_test_cases() -> list[tuple[str, dict[str, Any]]]:
         (
             "get_attraction_wiki",
             {
-                "city": "Rome",
                 "attraction_name": "Colosseum",
-                "include_live_data": False,
             },
         ),
         (

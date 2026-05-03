@@ -1,5 +1,7 @@
 from mcp.server.fastmcp import FastMCP
 from wikipedia import get_wikipedia_summary
+from opentripmap import get_opentripmap_info
+from web_search import get_duckduckgo_snippets
 
 # YeyeTour MCP 서버 인스턴스 생성
 mcp = FastMCP("YeyeTourServer")
@@ -34,10 +36,21 @@ async def get_attraction_wiki(attraction_name: str) -> str:
     관광지의 역사, 문화적 배경, 운영 시간, 꿀팁 등 상세 설명을 제공합니다.
     
     Args:
-        attraction_name: 관광지 이름 (예: "Eiffel Tower")
+        attraction_name: 관광지 이름 (한글 또는 영문 입력 가능, 영문 입력 시 자동으로 한글 표제어로 변환됨. 예: "Eiffel Tower" 또는 "에펠탑")
     """
     wiki_summary = await get_wikipedia_summary(attraction_name)
-    return f"{attraction_name}에 대한 위키백과 상세 정보:\n\n{wiki_summary}"
+    
+    # 실시간 운영 시간, 꿀팁 등 최신 정보 가져오기 (무료 DuckDuckGo 웹 검색)
+    live_tips = await get_duckduckgo_snippets(f"{attraction_name} 운영시간 꿀팁")
+
+    # 위키백과 조회 실패 시 OpenTripMap 정보로 대체(Fallback)
+    if "찾을 수 없습니다" in wiki_summary or "제공되지 않았습니다" in wiki_summary or "요약 정보가 없습니다" in wiki_summary:
+        otm_info = await get_opentripmap_info(attraction_name)
+        if otm_info:
+            return f"{attraction_name}에 대한 OpenTripMap 상세 정보:\n\n{otm_info}\n\n{live_tips}"
+        return f"{attraction_name}에 대한 정보를 위키백과 및 OpenTripMap에서 모두 찾을 수 없습니다.\n\n{live_tips}"
+
+    return f"{attraction_name}에 대한 위키백과 상세 정보:\n\n{wiki_summary}\n\n{live_tips}"
 
 @mcp.tool()
 def generate_map_links(route: list[str]) -> str:

@@ -77,7 +77,8 @@ async def get_wikipedia_summary(title: str) -> str:
         title = await get_korean_title(title)
 
     # 정확한 표제어로 검색어 교정 (오타 보완)
-    title = await correct_wikipedia_title(title)
+    # 영문 단어가 그대로 남은 경우, 한국어 
+        title = await correct_wikipedia_title(title)
 
     url = f"https://ko.wikipedia.org/api/rest_v1/page/summary/{title}"
     headers = {"User-Agent": "YeyeTour/1.0 (sdsclass)"}

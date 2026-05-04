@@ -2,18 +2,12 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# 1. 의존성 먼저 복사 및 설치
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
-
-COPY server.py /app/server.py
-COPY README.md /app/README.md
-
-ENV MCP_TRANSPORT=streamable-http
-ENV HOST=0.0.0.0
-ENV PORT=8000
+# 2. 로컬 모듈(wikipedia.py, osrm.py 등)을 모두 포함하여 전체 복사
+COPY . .
 
 EXPOSE 8000
 

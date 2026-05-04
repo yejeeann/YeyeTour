@@ -1,4 +1,3 @@
-mcp[cli]>=1.0.0
-httpx>=0.27.0
-starlette>=0.37.2
-uvicorn>=0.34.0
+# 외부 라이브러리만 명시합니다 (wikipedia는 제외)
+mcp
+httpx

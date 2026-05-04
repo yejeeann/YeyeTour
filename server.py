@@ -4,7 +4,7 @@ from opentripmap import get_opentripmap_info
 from web_search import get_duckduckgo_snippets
 
 # YeyeTour MCP 서버 인스턴스 생성
-mcp = FastMCP("YeyeTourServer")
+mcp = FastMCP("YeyeTourServer", host="0.0.0.0", port=8000)
 
 @mcp.tool()
 def plan_trip(cities: list[str], start_date: str, end_date: str) -> str:
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     import os
     transport = os.getenv("MCP_TRANSPORT", "stdio")
     if transport in ("streamable-http", "sse"):
-        mcp.run(transport="sse", host="0.0.0.0", port=8000)
+        mcp.run(transport="sse")
     else:
         # MCP 서버 실행 (stdio 통신 모드)
         mcp.run()

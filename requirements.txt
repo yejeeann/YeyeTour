@@ -1,3 +1,5 @@
 # 외부 라이브러리만 명시합니다 (wikipedia는 제외)
 mcp
 httpx
+starlette>=0.37.2
+uvicorn>=0.34.0

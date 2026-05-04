@@ -63,5 +63,11 @@ def generate_map_links(route: list[str]) -> str:
     return f"구글 지도 링크: https://www.google.com/maps/dir/{'/'.join(route).replace(' ', '+')}"
 
 if __name__ == "__main__":
-    # MCP 서버 실행 (stdio 통신 모드)
-    mcp.run()
+    import os
+    transport = os.getenv("MCP_TRANSPORT", "stdio")
+    if transport in ("streamable-http", "sse"):
+        mcp.run(transport="sse", host="0.0.0.0", port=8000)
+    else:
+        # MCP 서버 실행 (stdio 통신 모드)
+        mcp.run()
+

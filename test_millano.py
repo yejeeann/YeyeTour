@@ -1,15 +1,10 @@
 import asyncio
-from opentripmap import get_opentripmap_info
-from wikipedia import get_wikipedia_summary
+from server import get_attraction_wiki
 
 async def main():
-    result = await get_opentripmap_info("milano")
-    print("=== Test Result for OpenTripMap (milano) ===")
+    print("=== Test Result for Mont-Blanc ===")
+    result = await get_attraction_wiki("Mont-Blanc")
     print(result)
-
-    print("\n=== Test Result for Wikipedia (milano) ===")
-    wiki_result = await get_wikipedia_summary("milano")
-    print(wiki_result)
 
 if __name__ == "__main__":
     asyncio.run(main())
